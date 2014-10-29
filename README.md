@@ -1,5 +1,5 @@
 Lutung - Java Mandrill API
-======
+=======
 
 Lutung - a Java interface to the [Mandrill](http://www.mandrill.com/) API. 
 Check out Mandrill's API [Documentation]

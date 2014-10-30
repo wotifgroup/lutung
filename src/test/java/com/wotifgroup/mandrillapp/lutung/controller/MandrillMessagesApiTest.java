@@ -3,22 +3,15 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-
-import com.wotifgroup.mandrillapp.lutung.view.MandrillMessageContent;
+import com.wotifgroup.mandrillapp.lutung.MandrillTestCase;
+import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
+import com.wotifgroup.mandrillapp.lutung.view.*;
 import junit.framework.Assert;
-
 import org.junit.Assume;
 import org.junit.Test;
 
-import com.wotifgroup.mandrillapp.lutung.MandrillTestCase;
-import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
-import com.wotifgroup.mandrillapp.lutung.view.MandrillMessage;
-import com.wotifgroup.mandrillapp.lutung.view.MandrillMessageInfo;
-import com.wotifgroup.mandrillapp.lutung.view.MandrillSearchMessageParams;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * <p>Tests for the messages api implementations.</p>
@@ -99,4 +92,71 @@ public final class MandrillMessagesApiTest extends MandrillTestCase {
             Assert.assertNotNull( content );
         }
     }
+
+    @Test
+    public final void actualSend() throws IOException, MandrillApiError {
+        final MandrillMessage message = prepareMessage();
+        MandrillMessageStatus response =  mandrillApi.messages().sendTemplate("templateName", null, message,
+                false)[0];
+        Assert.assertEquals(response.getStatus(), "sent");
+    }
+
+    private MandrillMessage prepareMessage() throws MandrillApiError {
+        final MandrillMessage message = new MandrillMessage();
+        message.setAutoText(true);
+        message.setTo(new ArrayList<MandrillMessage.Recipient>());
+        message.setMergeVars(new ArrayList<MandrillMessage.MergeVarBucket>());
+        String testEmail = "test@testemail.com";
+        addRecipient(message, testEmail);
+        addMergeVar(message, "field", "content", testEmail);
+        addMergeVar(message, "objectField", new ExampleClass(), testEmail);
+
+        List<ExampleClass> examples = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            examples.add(new ExampleClass());
+        }
+        addMergeVar(message, "arrayOfObjects", examples, testEmail);
+
+        return message;
+    }
+
+    public void addRecipient(MandrillMessage mandrillMessage, final String email) {
+        MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
+        recipient.setEmail(email);
+        mandrillMessage.getTo().add(recipient);
+        MandrillMessage.MergeVarBucket mergeVarBucket = new MandrillMessage.MergeVarBucket();
+        mergeVarBucket.setRcpt(email);
+        mandrillMessage.getMergeVars().add(mergeVarBucket);
+    }
+
+    private void addMergeVar(MandrillMessage mandrillMessage, String name, Object content,
+                            String email) throws MandrillApiError {
+        content = content == null ? "" : content; //If content is null just replace with empty strings
+        MandrillMessage.MergeVar bookingIdVar = new MandrillMessage.MergeVar();
+        bookingIdVar.setName(name);
+        bookingIdVar.setContent(content);
+
+        //Create an array to set merge vars
+        ArrayList<MandrillMessage.MergeVar>mergeVarArr = new ArrayList<MandrillMessage.MergeVar>();
+        mergeVarArr.add(bookingIdVar);
+        for (MandrillMessage.MergeVarBucket mergeVarBucket : mandrillMessage.getMergeVars()) {
+            if (mergeVarBucket.getRcpt().equals(email)) {
+                appendMergeVar(mergeVarBucket, mergeVarArr);
+                return;
+            }
+        }
+        throw new MandrillApiError(String.format("E-mail %s should be added as a recipient first", email));
+    }
+
+    private void appendMergeVar(MandrillMessage.MergeVarBucket mergeVarBucket, ArrayList<MandrillMessage.MergeVar>mergeVarArr ) {
+        if (mergeVarBucket.getVars() != null) {
+            Collections.addAll(mergeVarArr, mergeVarBucket.getVars());
+        }
+        mergeVarBucket.setVars(mergeVarArr.toArray(new MandrillMessage.MergeVar[mergeVarArr.size()]));
+    }
+}
+
+class ExampleClass {
+    public final String firstValue = "thisIsFirst";
+    public final String anotherValue = "thisIsAnotherVal";
 }

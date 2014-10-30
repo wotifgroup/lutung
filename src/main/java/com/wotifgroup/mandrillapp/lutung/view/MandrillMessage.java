@@ -13,7 +13,7 @@ import java.util.Map;
  * @since Mar 16, 2013
  */
 public class MandrillMessage {
-	private String subject, html, text, from_email, from_name;
+	private String subject, html, text, from_email, from_name, merge_language;
 	private List<Recipient> to;
 	private Map<String,String> headers;
 	private Boolean important, track_opens, track_clicks, auto_text, auto_html, 
@@ -103,6 +103,20 @@ public class MandrillMessage {
 	public void setFromName(final String name) {
 		this.from_name = name;
 	}
+
+    /**
+     * @return Optional merge_language.
+     */
+    public String getMergeLanguage() {
+        return merge_language;
+    }
+
+    /**
+     * @param merge_language Optional merge_language.
+     */
+    public void setMergeLanguage(final String merge_language) {
+        this.merge_language = merge_language;
+    }
 
 	/**
 	 * @return The list of recipients.
@@ -731,7 +745,8 @@ public class MandrillMessage {
 	 * @since Mar 16, 2013
 	 */
 	public static class MergeVar {
-		private String name, content;
+		private String name;
+        private Object content;
 
 		/**
 		 * Construct a MergeVar.
@@ -742,9 +757,9 @@ public class MandrillMessage {
 		/**
 		 * Construct and assign name and content in one step.
 		 * @param name The merge variable's name
-		 * @param content The merge variable's content.
+		 * @param content The merge variable's content
 		 */
-		public MergeVar(final String name, final String content) {
+		public MergeVar(final String name, final Object content) {
 			this.name = name;
 			this.content = content;
 		}
@@ -768,13 +783,13 @@ public class MandrillMessage {
 		/**
 		 * @return The merge variable's content.
 		 */
-		public String getContent() {
+		public Object getContent() {
 			return content;
 		}
 		/**
 		 * @param content The merge variable's content.
 		 */
-		public void setContent(final String content) {
+		public void setContent(final Object content) {
 			this.content = content;
 		}
 	}

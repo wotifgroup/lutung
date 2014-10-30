@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.microtripit">
+	<logger name="com.wotifgroup">
 		<level value="info" />
 	</logger>
 	

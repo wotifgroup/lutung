@@ -3,7 +3,10 @@
  */
 package com.wotifgroup.mandrillapp.lutung.view;
 
+import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +35,50 @@ public class MandrillMessage {
 	private List<MessageContent> attachments;
 	private List<MessageContent> images;
 	// following params are send-only
-	
-	
+
+
+
+    public MandrillMessage enableExtension() {
+        this.setAutoText(true);
+        this.setTo(new ArrayList<Recipient>());
+        this.setMergeVars(new ArrayList<MandrillMessage.MergeVarBucket>());
+        return this;
+    }
+
+    public void addRecipient(final String email) {
+        MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
+        recipient.setEmail(email);
+        this.getTo().add(recipient);
+        MandrillMessage.MergeVarBucket mergeVarBucket = new MandrillMessage.MergeVarBucket();
+        mergeVarBucket.setRcpt(email);
+        this.getMergeVars().add(mergeVarBucket);
+    }
+
+    public void addMergeVar(String name, Object content, String email) throws MandrillApiError {
+        content = content == null ? "" : content; //If content is null just replace with empty strings
+        MandrillMessage.MergeVar bookingIdVar = new MandrillMessage.MergeVar();
+        bookingIdVar.setName(name);
+        bookingIdVar.setContent(content);
+
+        //Create an array to set merge vars
+        ArrayList<MandrillMessage.MergeVar>mergeVarArr = new ArrayList<MandrillMessage.MergeVar>();
+        mergeVarArr.add(bookingIdVar);
+        for (MergeVarBucket mergeVarBucket : this.getMergeVars()) {
+            if (mergeVarBucket.getRcpt().equals(email)) {
+                appendMergeVar(mergeVarBucket, mergeVarArr);
+                return;
+            }
+        }
+        throw new MandrillApiError(String.format("E-mail %s should be added as a recipient first", email));
+    }
+
+    private void appendMergeVar(MergeVarBucket mergeVarBucket, ArrayList<MandrillMessage.MergeVar>mergeVarArr ) {
+        if (mergeVarBucket.getVars() != null) {
+            Collections.addAll(mergeVarArr, mergeVarBucket.getVars());
+        }
+        mergeVarBucket.setVars(mergeVarArr.toArray(new MandrillMessage.MergeVar[mergeVarArr.size()]));
+    }
+
 	/**
 	 * @return The message subject.
 	 */

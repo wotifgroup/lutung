@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mandrillapp.wrapper.lutung</groupId>
+    <groupId>com.wotifgroup.wrapper.lutung</groupId>
     <artifactId>lutung</artifactId>
     <version>0.0.6-SNAPSHOT</version>
     <name>lutung</name>
@@ -41,9 +41,9 @@
 
     <!-- Scm release info -->
     <scm>
-        <connection>scm:git:git://github.com/rschreijer/lutung.git</connection>
-        <developerConnection>scm:git:git@github.com:rschreijer/lutung.git</developerConnection>
-        <url>http://github.com/rschreijer/lutung</url>
+        <connection>scm:git:git://github.com/wotifgroup/lutung.git</connection>
+        <developerConnection>scm:git:git@github.com:wotifgroup/lutung.git</developerConnection>
+        <url>http://github.com/wotifgroup/lutung</url>
     </scm>
 
     <build>
@@ -128,17 +128,13 @@
     </profiles>
 
     <distributionManagement>
-        <!-- Sonatype repo info -->
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
+
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus release repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>wotif</id>
+            <name>Wotif Internal Repository</name>
+            <url>dav:http://maven.dev.wotifgroup.com/content/repositories/releases</url>
         </repository>
+
     </distributionManagement>
 
     <dependencies>

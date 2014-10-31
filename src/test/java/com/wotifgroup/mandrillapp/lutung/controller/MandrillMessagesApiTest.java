@@ -96,7 +96,7 @@ public final class MandrillMessagesApiTest extends MandrillTestCase {
     @Test
     public final void actualSend() throws IOException, MandrillApiError {
         final MandrillMessage message = prepareMessage();
-        MandrillMessageStatus response =  mandrillApi.messages().sendTemplate("templateName", null, message,
+        MandrillMessageStatus response =  mandrillApi.messages().sendTemplate("testTemplate", null, message,
                 false)[0];
         Assert.assertEquals(response.getStatus(), "sent");
     }
@@ -107,52 +107,17 @@ public final class MandrillMessagesApiTest extends MandrillTestCase {
         message.setTo(new ArrayList<MandrillMessage.Recipient>());
         message.setMergeVars(new ArrayList<MandrillMessage.MergeVarBucket>());
         String testEmail = "test@testemail.com";
-        addRecipient(message, testEmail);
-        addMergeVar(message, "field", "content", testEmail);
-        addMergeVar(message, "objectField", new ExampleClass(), testEmail);
+        message.addRecipient( testEmail);
+        message.addMergeVar("field", "content", testEmail);
+        message.addMergeVar("objectField", new ExampleClass(), testEmail);
 
         List<ExampleClass> examples = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             examples.add(new ExampleClass());
         }
-        addMergeVar(message, "arrayOfObjects", examples, testEmail);
+        message.addMergeVar("arrayOfObjects", examples, testEmail);
 
         return message;
-    }
-
-    public void addRecipient(MandrillMessage mandrillMessage, final String email) {
-        MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
-        recipient.setEmail(email);
-        mandrillMessage.getTo().add(recipient);
-        MandrillMessage.MergeVarBucket mergeVarBucket = new MandrillMessage.MergeVarBucket();
-        mergeVarBucket.setRcpt(email);
-        mandrillMessage.getMergeVars().add(mergeVarBucket);
-    }
-
-    private void addMergeVar(MandrillMessage mandrillMessage, String name, Object content,
-                            String email) throws MandrillApiError {
-        content = content == null ? "" : content; //If content is null just replace with empty strings
-        MandrillMessage.MergeVar bookingIdVar = new MandrillMessage.MergeVar();
-        bookingIdVar.setName(name);
-        bookingIdVar.setContent(content);
-
-        //Create an array to set merge vars
-        ArrayList<MandrillMessage.MergeVar>mergeVarArr = new ArrayList<MandrillMessage.MergeVar>();
-        mergeVarArr.add(bookingIdVar);
-        for (MandrillMessage.MergeVarBucket mergeVarBucket : mandrillMessage.getMergeVars()) {
-            if (mergeVarBucket.getRcpt().equals(email)) {
-                appendMergeVar(mergeVarBucket, mergeVarArr);
-                return;
-            }
-        }
-        throw new MandrillApiError(String.format("E-mail %s should be added as a recipient first", email));
-    }
-
-    private void appendMergeVar(MandrillMessage.MergeVarBucket mergeVarBucket, ArrayList<MandrillMessage.MergeVar>mergeVarArr ) {
-        if (mergeVarBucket.getVars() != null) {
-            Collections.addAll(mergeVarArr, mergeVarBucket.getVars());
-        }
-        mergeVarBucket.setVars(mergeVarArr.toArray(new MandrillMessage.MergeVar[mergeVarArr.size()]));
     }
 }
 

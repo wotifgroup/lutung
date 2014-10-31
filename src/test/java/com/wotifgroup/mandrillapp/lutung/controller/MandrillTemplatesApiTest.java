@@ -3,17 +3,18 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-
 import com.wotifgroup.mandrillapp.lutung.MandrillTestCase;
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
+import com.wotifgroup.mandrillapp.lutung.view.MandrillMessage;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillTemplate;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillTimeSeries;
+import junit.framework.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author rschreijer
@@ -184,19 +185,38 @@ public final class MandrillTemplatesApiTest extends MandrillTestCase {
 	
 	@Test
 	public final void testRender() throws IOException, MandrillApiError {
-		final String code = "<html><body><h1>Hello *|MERGE1|*!</h1></body></html>";
+		final String code = "<html><body><h1>Hello *|merge1|*!</h1></body></html>";
 		MandrillTemplate t = mandrillApi.templates().add(templateName, 
 				code, false);
 		Assert.assertNotNull(t);
 		final HashMap<String, String> content = new HashMap<String,String>();
-		content.put("editable", "<div>foo *|MERGE2|*</div>");
-		final HashMap<String, String> mergeVars = new HashMap<String, String>();
-		mergeVars.put("merge1", "Lutung");
-		mergeVars.put("merge2", "bar");
+        content.put("", "");
+        final MandrillMessage message = prepareMessage();
+
 		final String rendered = mandrillApi.templates().render(
-				t.getName(), content, mergeVars);
+				t.getName(), content, message.getMergeVars().get(0).getVars());
 		Assert.assertNotNull(rendered);
-		Assert.assertEquals(code.replace("*|MERGE1|*", "Lutung"), rendered);
+		Assert.assertEquals(code.replace("*|merge1|*", "this is overwritten"), rendered);
 	}
+
+    private MandrillMessage prepareMessage() throws MandrillApiError {
+        final MandrillMessage message = new MandrillMessage();
+        message.setAutoText(true);
+        message.setTo(new ArrayList<MandrillMessage.Recipient>());
+        message.setMergeVars(new ArrayList<MandrillMessage.MergeVarBucket>());
+        String testEmail = "test@testemail.com";
+        message.addRecipient( testEmail);
+        message.addMergeVar("field", "content", testEmail);
+        message.addMergeVar("merge1", "this is overwritten", testEmail);
+        message.addMergeVar("objectField", new ExampleClass(), testEmail);
+
+        List<ExampleClass> examples = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            examples.add(new ExampleClass());
+        }
+        message.addMergeVar("arrayOfObjects", examples, testEmail);
+
+        return message;
+    }
 	
 }

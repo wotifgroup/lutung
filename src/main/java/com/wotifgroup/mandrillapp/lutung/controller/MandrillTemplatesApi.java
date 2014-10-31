@@ -3,16 +3,18 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
 import com.wotifgroup.mandrillapp.lutung.model.MandrillContentWrapper;
 import com.wotifgroup.mandrillapp.lutung.model.MandrillHelperClasses.MandrillRenderTemplateResponse;
+import com.wotifgroup.mandrillapp.lutung.view.MandrillMessage;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillTemplate;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillTimeSeries;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author rschreijer
@@ -239,7 +241,7 @@ public class MandrillTemplatesApi {
 	 */
 	public String render(final String name, 
 			final Map<String,String> templateContent, 
-			final Map<String,String> mergeVars) 
+			final List<MandrillMessage.MergeVar> mergeVars)
 					throws MandrillApiError, IOException {
 		
 		final HashMap<String,Object> params = MandrillUtil.paramsWithKey(key);
@@ -254,13 +256,7 @@ public class MandrillTemplatesApi {
 			params.put("template_content", contents);
 		}
 		if(mergeVars != null && !mergeVars.isEmpty()) {
-			final ArrayList<MandrillContentWrapper> vars = 
-					new ArrayList<MandrillContentWrapper>(mergeVars.size());
-			for(String cName : mergeVars.keySet()) {
-				vars.add( MandrillContentWrapper.create(
-						cName, mergeVars.get(cName)) );
-			}
-			params.put("merge_vars", vars);
+			params.put("merge_vars", mergeVars);
 		}
 		return MandrillUtil.query(rootUrl+ "templates/render.json", 
 				params, MandrillRenderTemplateResponse.class).getHtml();

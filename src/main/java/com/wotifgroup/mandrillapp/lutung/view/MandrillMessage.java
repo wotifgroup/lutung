@@ -60,23 +60,20 @@ public class MandrillMessage {
         bookingIdVar.setName(name);
         bookingIdVar.setContent(content);
 
-        //Create an array to set merge vars
-        ArrayList<MandrillMessage.MergeVar>mergeVarArr = new ArrayList<MandrillMessage.MergeVar>();
-        mergeVarArr.add(bookingIdVar);
         for (MergeVarBucket mergeVarBucket : this.getMergeVars()) {
             if (mergeVarBucket.getRcpt().equals(email)) {
-                appendMergeVar(mergeVarBucket, mergeVarArr);
+                appendMergeVar(mergeVarBucket, bookingIdVar);
                 return;
             }
         }
         throw new MandrillApiError(String.format("E-mail %s should be added as a recipient first", email));
     }
 
-    private void appendMergeVar(MergeVarBucket mergeVarBucket, ArrayList<MandrillMessage.MergeVar>mergeVarArr ) {
-        if (mergeVarBucket.getVars() != null) {
-            Collections.addAll(mergeVarArr, mergeVarBucket.getVars());
+    private void appendMergeVar(MergeVarBucket mergeVarBucket, MergeVar mergeVar ) {
+        if (mergeVarBucket.getVars() == null) {
+            mergeVarBucket.setVars(new ArrayList<MergeVar>());
         }
-        mergeVarBucket.setVars(mergeVarArr.toArray(new MandrillMessage.MergeVar[mergeVarArr.size()]));
+        mergeVarBucket.getVars().add(mergeVar);
     }
 
 	/**
@@ -755,7 +752,7 @@ public class MandrillMessage {
 	 */
 	public static class MergeVarBucket {
 		private String rcpt;
-		private MergeVar[] vars;
+		private List<MergeVar> vars;
 		/**
 		 * @return The email address of the recipient that 
 		 * the merge variables should apply to.
@@ -773,13 +770,13 @@ public class MandrillMessage {
 		/**
 		 * @return The recipient's merge variables.
 		 */
-		public MergeVar[] getVars() {
+		public List<MergeVar> getVars() {
 			return vars;
 		}
 		/**
 		 * @param vars The recipient's merge variables.
 		 */
-		public void setVars(final MergeVar[] vars) {
+		public void setVars(final List<MergeVar> vars) {
 			this.vars = vars;
 		}
 	}

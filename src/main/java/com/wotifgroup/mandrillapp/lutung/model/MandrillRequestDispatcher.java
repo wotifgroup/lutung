@@ -3,24 +3,27 @@
  */
 package com.wotifgroup.mandrillapp.lutung.model;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.*;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpHost;
 import com.wotifgroup.mandrillapp.lutung.logging.Logger;
 import com.wotifgroup.mandrillapp.lutung.logging.LoggerFactory;
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError.MandrillError;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.util.EntityUtils;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.util.List;
 
 /**
  * @author rschreijer
@@ -87,6 +90,9 @@ public final class MandrillRequestDispatcher {
 			} else {
 				// ==> compile mandrill error!
 				final String e = IOUtils.toString(responseInputStream);
+                log.error("Inputstream is " + e);
+                log.error("Unexpected status " + status.getStatusCode());
+                log.error("Reason: " + status.getReasonPhrase());
 				final MandrillError error = LutungGsonUtils.getGson()
 						.fromJson(e, MandrillError.class);
 				throw new MandrillApiError(

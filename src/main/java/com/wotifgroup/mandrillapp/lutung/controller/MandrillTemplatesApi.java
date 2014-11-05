@@ -21,10 +21,11 @@ import java.util.Map;
  * @since Mar 19, 2013
  */
 public class MandrillTemplatesApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillTemplatesApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 

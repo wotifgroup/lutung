@@ -1,16 +1,17 @@
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillSubaccountInfo;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 public class MandrillSubaccountsApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillSubaccountsApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

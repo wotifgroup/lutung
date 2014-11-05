@@ -3,22 +3,23 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillTimeSeries;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillUrl;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * @author rschreijer
  * @since Mar 19, 2013
  */
 public class MandrillUrlsApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillUrlsApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

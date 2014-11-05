@@ -3,13 +3,13 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
+import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
+import com.wotifgroup.mandrillapp.lutung.view.MandrillExportJobInfo;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-
-import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
-import com.wotifgroup.mandrillapp.lutung.view.MandrillExportJobInfo;
 
 /**
  * <p>Exports Calls.</p>
@@ -17,10 +17,11 @@ import com.wotifgroup.mandrillapp.lutung.view.MandrillExportJobInfo;
  *
  */
 public class MandrillExportsApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillExportsApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

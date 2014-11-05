@@ -25,27 +25,34 @@ public class MandrillApi {
 	private final MandrillExportsApi exports;
 	private final MandrillIpsApi ips;
 	
-	public MandrillApi(final String key) {
-		if(key == null) {
-			throw new NullPointerException(
-					"'key' is null; please provide Mandrill API key");
-			
-		}
-		this.key = key;
-		users = new MandrillUsersApi(key);
-		messages = new MandrillMessagesApi(key);
-		tags = new MandrillTagsApi(key);
-		rejects = new MandrillRejectsApi(key);
-		whitelists = new MandrillWhitelistsApi(key);
-		senders = new MandrillSendersApi(key);
-		urls = new MandrillUrlsApi(key);
-		templates = new MandrillTemplatesApi(key);
-		webhooks = new MandrillWebhooksApi(key);
-		subaccounts = new MandrillSubaccountsApi(key);
-		inbound = new MandrillInboundApi(key);
-		exports = new MandrillExportsApi(key);
-		ips = new MandrillIpsApi(key);
+	public MandrillApi(final String key, final String address) {
+        if (address != null) {
+            overrideMandrillApiAddress(address);
+        }
+        if(key == null) {
+            throw new NullPointerException(
+                    "'key' is null; please provide Mandrill API key");
+
+        }
+        this.key = key;
+        users = new MandrillUsersApi(key);
+        messages = new MandrillMessagesApi(key);
+        tags = new MandrillTagsApi(key);
+        rejects = new MandrillRejectsApi(key);
+        whitelists = new MandrillWhitelistsApi(key);
+        senders = new MandrillSendersApi(key);
+        urls = new MandrillUrlsApi(key);
+        templates = new MandrillTemplatesApi(key);
+        webhooks = new MandrillWebhooksApi(key);
+        subaccounts = new MandrillSubaccountsApi(key);
+        inbound = new MandrillInboundApi(key);
+        exports = new MandrillExportsApi(key);
+        ips = new MandrillIpsApi(key);
 	}
+
+    private void overrideMandrillApiAddress(String address) {
+        MandrillUtil.rootUrl = address;
+    }
 
 	/**
 	 * @return Your Mandrill API key.
@@ -109,9 +116,5 @@ public class MandrillApi {
 	public MandrillIpsApi ips() {
 		return ips;
 	}
-
-    public void overrideMandrillApiAddress(String address) {
-        MandrillUtil.rootUrl = address;
-    }
 	
 }

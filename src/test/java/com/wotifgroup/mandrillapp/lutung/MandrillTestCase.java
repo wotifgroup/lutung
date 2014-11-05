@@ -66,7 +66,7 @@ public abstract class MandrillTestCase {
     public static final void runBeforeClass() {
         final String key = getMandrillApiKey();
         if(key != null) {
-            mandrillApi = new MandrillApi(key);
+            mandrillApi = new MandrillApi(key, null);
         } else {
             mandrillApi = null;
         }

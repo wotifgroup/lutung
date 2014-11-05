@@ -16,10 +16,11 @@ import com.wotifgroup.mandrillapp.lutung.view.MandrillWebhook;
  * @since Mar 19, 2013
  */
 public class MandrillWebhooksApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillWebhooksApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

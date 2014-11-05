@@ -3,11 +3,11 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillSender;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillUserInfo;
+
+import java.io.IOException;
 
 /**
  * <p></p>
@@ -15,10 +15,11 @@ import com.wotifgroup.mandrillapp.lutung.view.MandrillUserInfo;
  * @since Mar 19, 2013
  */
 public class MandrillUsersApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillUsersApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

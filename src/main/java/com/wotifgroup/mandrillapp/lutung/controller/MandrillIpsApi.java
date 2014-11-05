@@ -3,24 +3,25 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillDedicatedIp;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillDedicatedIp.MandrillDnsCheck;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillDedicatedIpPool;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author rschreijer
  *
  */
 public class MandrillIpsApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillIpsApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

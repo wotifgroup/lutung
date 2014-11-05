@@ -1,17 +1,18 @@
 package com.wotifgroup.mandrillapp.lutung.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
 import com.wotifgroup.mandrillapp.lutung.model.MandrillHelperClasses.EmailClass;
 import com.wotifgroup.mandrillapp.lutung.view.MandrillWhitelistEntry;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 public class MandrillWhitelistsApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillWhitelistsApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	

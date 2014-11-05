@@ -86,10 +86,17 @@ public final class MandrillApiTest extends MandrillTestCase {
 	public final void testIps() {
 		Assert.assertNotNull(mandrillApi.ips());
 	}
+
     @Test
     public final void testOverrideAddress() throws MandrillApiError {
         String newAddress = "https://overtheproxy.com/api";
-        mandrillApi.overrideMandrillApiAddress(newAddress);
+        MandrillApi anotherMandrillApi = new MandrillApi("somekey", newAddress);
         Assert.assertEquals(newAddress, MandrillUtil.rootUrl);
+    }
+
+    @Test
+    public final void testNullifyAddress() throws MandrillApiError {
+        MandrillApi anotherMandrillApi = mandrillApi = new MandrillApi("somekey", null);
+        Assert.assertNotNull(MandrillUtil.rootUrl);
     }
 }

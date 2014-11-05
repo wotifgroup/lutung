@@ -3,23 +3,24 @@
  */
 package com.wotifgroup.mandrillapp.lutung.controller;
 
+import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
+import com.wotifgroup.mandrillapp.lutung.model.MandrillHelperClasses.MandrillRejectsAdded;
+import com.wotifgroup.mandrillapp.lutung.model.MandrillHelperClasses.MandrillRejectsDeleted;
+import com.wotifgroup.mandrillapp.lutung.view.MandrillRejectsEntry;
+
 import java.io.IOException;
 import java.util.HashMap;
-
-import com.wotifgroup.mandrillapp.lutung.model.MandrillApiError;
-import com.wotifgroup.mandrillapp.lutung.model.MandrillHelperClasses.MandrillRejectsDeleted;
-import com.wotifgroup.mandrillapp.lutung.model.MandrillHelperClasses.MandrillRejectsAdded;
-import com.wotifgroup.mandrillapp.lutung.view.MandrillRejectsEntry;
 
 /**
  * @author rschreijer
  * @since Mar 19, 2013
  */
 public class MandrillRejectsApi {
-	private static final String rootUrl = MandrillUtil.rootUrl;
+	private final String rootUrl;
 	private final String key;
 	
 	public MandrillRejectsApi(final String key) {
+        this.rootUrl = MandrillUtil.rootUrl;
 		this.key = key;
 	}
 	
